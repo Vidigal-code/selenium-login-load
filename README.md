@@ -18,6 +18,13 @@ Automate multiple configurable simultaneous logins to the test application:
 
 <img src="./example/example.png" alt="" width="800"/> 
 
+---
+
+<img src="./example/example-docker.png" alt="" width="800"/> 
+
+---
+
+
 ## How to use Python
 
 1. Install dependencies:

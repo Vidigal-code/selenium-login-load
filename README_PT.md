@@ -7,6 +7,12 @@ Automatize múltiplos logins simultâneos configuráveis na aplicação de teste
 
 <img src="./example/example.png" alt="" width="800"/> 
 
+---
+
+<img src="./example/example-docker.png" alt="" width="800"/> 
+
+---
+
 ## Como usar Python
 
 1. Instale as dependências:
