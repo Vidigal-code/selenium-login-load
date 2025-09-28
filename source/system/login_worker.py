@@ -10,6 +10,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from dotenv import load_dotenv
 from source.config.driverconfig import create_driver
+from source.messages.message_errors import ERROR_MESSAGES_LOGIN_WORKER
+from source.messages.message_system import MESSAGE_SYSTEM_LOGIN_WORKER
 
 load_dotenv()
 
@@ -33,7 +35,7 @@ def save_file(content, path):
             f.write(content)
         return path
     except Exception as e:
-        print(f"Falha ao salvar HTML: {e}")
+        print(ERROR_MESSAGES_LOGIN_WORKER["save_html_failed_text"].format(details=str(e)))
         return ""
 
 def save_screenshot(driver, path):
@@ -41,14 +43,14 @@ def save_screenshot(driver, path):
         driver.save_screenshot(path)
         return path
     except Exception as e:
-        print(f"Falha ao salvar screenshot: {e}")
+        print(ERROR_MESSAGES_LOGIN_WORKER["save_screenshot_failed_text"].format(details=str(e)))
         return ""
 
 def perform_login(index, seq_id):
     result = {
         "id": seq_id,
         "index": index,
-        "status": "Failed",
+        "status": MESSAGE_SYSTEM_LOGIN_WORKER["status_failed_text"],
         "url": "",
         "error": "",
         "time_seconds": 0,
@@ -80,10 +82,10 @@ def perform_login(index, seq_id):
             password_elem.send_keys(LOGIN_PASSWORD)
             submit_elem.click()
         except TimeoutException:
-            result["error"] = "Timeout ao buscar elementos de login."
+            result["error"] = ERROR_MESSAGES_LOGIN_WORKER["timeout_login_elements_text"]
             return result
         except NoSuchElementException:
-            result["error"] = "Elemento de login não encontrado."
+            result["error"] = ERROR_MESSAGES_LOGIN_WORKER["login_element_not_found_text"]
             return result
 
         time.sleep(1)
@@ -91,7 +93,7 @@ def perform_login(index, seq_id):
 
         if SAVE_SCREENSHOTS:
             result["screenshot"] = save_screenshot(driver, screenshot_path)
-        if SAVE_HTML_ON_FAILURE or result["status"] != "SUCCESS":
+        if SAVE_HTML_ON_FAILURE or result["status"] != MESSAGE_SYSTEM_LOGIN_WORKER["status_success_text_page"]:
             result["html"] = save_file(driver.page_source, html_path)
 
         if TARGET_URL_TO_CHECK in driver.current_url:
@@ -99,30 +101,30 @@ def perform_login(index, seq_id):
                 success_msg = wait.until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, ".flash.success"))
                 ).text
-                if "You logged into a secure area!" in success_msg:
-                    result["status"] = "SUCCESS"
+                if MESSAGE_SYSTEM_LOGIN_WORKER["status_success_text_page_condition"] in success_msg:
+                    result["status"] = MESSAGE_SYSTEM_LOGIN_WORKER["status_success_text_page"]
                 else:
-                    result["error"] = "Redirecionado, mas mensagem de sucesso não encontrada."
+                    result["error"] = ERROR_MESSAGES_LOGIN_WORKER["redirect_no_success_message_text"]
             except TimeoutException:
-                result["error"] = "Redirecionamento, mas mensagem de sucesso não encontrada (timeout)."
+                result["error"] = ERROR_MESSAGES_LOGIN_WORKER["redirect_timeout_success_message_text"]
             except NoSuchElementException:
-                result["error"] = "Redirecionamento, mas mensagem de sucesso não encontrada."
+                result["error"] = ERROR_MESSAGES_LOGIN_WORKER["redirect_element_no_success_message_text"]
         else:
-            result["error"] = "Redirecionamento ou elemento de sucesso não encontrado."
+            result["error"] = ERROR_MESSAGES_LOGIN_WORKER["redirect_or_element_not_found_text"]
 
     except TimeoutException:
-        result["error"] = "Timeout geral do WebDriver."
+        result["error"] = ERROR_MESSAGES_LOGIN_WORKER["webdriver_timeout_text"]
     except NoSuchElementException:
-        result["error"] = "Elemento não encontrado na página."
+        result["error"] = ERROR_MESSAGES_LOGIN_WORKER["element_not_found_text"]
     except WebDriverException as e:
-        result["error"] = f"WebDriverException: {e}"
+        result["error"] = ERROR_MESSAGES_LOGIN_WORKER["webdriver_exception_text"].format(details=str(e))
     except Exception as e:
-        result["error"] = f"Erro inesperado: {e}"
+        result["error"] = ERROR_MESSAGES_LOGIN_WORKER["unexpected_error_text"].format(details=str(e))
     finally:
         result["time_seconds"] = round(time.time() - start_time, 2)
         if driver:
             try:
                 driver.quit()
             except Exception as e:
-                print(f"Falha ao finalizar driver: {e}")
+                print(ERROR_MESSAGES_LOGIN_WORKER["driver_quit_failed_text"].format(details=str(e)))
     return result

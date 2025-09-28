@@ -6,6 +6,7 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
 from source.system.login_worker import perform_login, OUTPUT_DIR
+from source.messages.message_system import MESSAGE_SYSTEM_RUN_LOGINS
 
 load_dotenv()
 
@@ -25,7 +26,7 @@ def generate_sequence(n):
         return [str(uuid.uuid4()) for _ in range(n)]
 
 def run_logins(n_logins):
-    print(f"\nIniciando {n_logins} logins simultâneos...")
+    print(MESSAGE_SYSTEM_RUN_LOGINS["start_logins_text"].format(n_logins=n_logins))
     start_total = time.time()
     results = []
 
@@ -43,16 +44,18 @@ def run_logins(n_logins):
         results.sort(key=lambda r: -int(r["id"]))
 
     for r in results:
-        print(f"[{r['index']}] ID: {r['id']} | Status: {r['status']} | Tempo: {r['time_seconds']}s")
+        print(MESSAGE_SYSTEM_RUN_LOGINS["login_status_text"].format(
+            index=r['index'], login_id=r['id'], status=r['status'], time_seconds=r['time_seconds']
+        ))
 
     total_time = round(time.time() - start_total, 2)
-    print(f"\nTempo total de execução: {total_time}s")
+    print(MESSAGE_SYSTEM_RUN_LOGINS["total_time_text"].format(total_time=total_time))
 
     if EXPORT_JSON:
         json_path = os.path.join(OUTPUT_DIR, "results.json")
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(results, f, ensure_ascii=False, indent=2)
-        print(f"Resultados exportados para {json_path}")
+        print(MESSAGE_SYSTEM_RUN_LOGINS["results_exported_json_text"].format(json_path=json_path))
 
     if EXPORT_CSV:
         csv_path = os.path.join(OUTPUT_DIR, "results.csv")
@@ -60,11 +63,13 @@ def run_logins(n_logins):
             writer = csv.DictWriter(f, fieldnames=results[0].keys())
             writer.writeheader()
             writer.writerows(results)
-        print(f"Resultados exportados para {csv_path}")
+        print(MESSAGE_SYSTEM_RUN_LOGINS["results_exported_csv_text"].format(csv_path=csv_path))
 
     summary_path = os.path.join(OUTPUT_DIR, "report_summary.txt")
     with open(summary_path, "w", encoding="utf-8") as f:
-        f.write(f"Total de logins: {n_logins}\nTempo total: {total_time}s\n")
+        f.write(MESSAGE_SYSTEM_RUN_LOGINS["summary_header_text"].format(n_logins=n_logins, total_time=total_time))
         for r in results:
-            f.write(f"[{r['index']}] ID: {r['id']} | {r['status']} - {r['time_seconds']}s\n")
-    print(f"Resumo salvo em {summary_path}")
+            f.write(MESSAGE_SYSTEM_RUN_LOGINS["summary_entry_text"].format(
+                index=r['index'], login_id=r['id'], status=r['status'], time_seconds=r['time_seconds']
+            ))
+    print(MESSAGE_SYSTEM_RUN_LOGINS["summary_saved_text"].format(summary_path=summary_path))
