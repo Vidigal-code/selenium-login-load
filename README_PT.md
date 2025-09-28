@@ -184,7 +184,7 @@ USE_GRID=false
 GRID_NODES=3
 
 # Caminho local do ChromeDriver (necessário para execução local no Windows)
-CHROMEDRIVER_PATH=C:\WebDriver\bin\chromedriver.exe
+CHROMEDRIVER_PATH=/usr/bin/chromedriver# Docker Config or windows C:\WebDriver\bin\chromedriver.exe
 ```
 
 ---
