@@ -3,9 +3,21 @@
 Automate multiple configurable simultaneous logins to the test application:  
 [https://the-internet.herokuapp.com/login](https://the-internet.herokuapp.com/login)
 
+---
+**Documentation in Portuguese**
+
+<div align="left">
+  <a href="https://github.com/Vidigal-code/selenium-login-load/blob/main/README_PT.md">
+    <strong>» Click here to view the official Portuguese documentation «</strong>
+  </a>
+</div>
+
+---
+
 ## Example 
 
 <img src="./example/example.png" alt="" width="800"/> 
+
 
 
 ## How to use
