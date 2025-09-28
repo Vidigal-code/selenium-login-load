@@ -1,5 +1,6 @@
 import os
 import time
+import logging
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import (
     WebDriverException,
@@ -12,6 +13,8 @@ from dotenv import load_dotenv
 from source.config.driverconfig import create_driver
 from source.messages.message_errors import ERROR_MESSAGES_LOGIN_WORKER
 from source.messages.message_system import MESSAGE_SYSTEM_LOGIN_WORKER
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 load_dotenv()
 
@@ -29,21 +32,23 @@ ELEMENT_WAIT_TIMEOUT = int(os.getenv("ELEMENT_WAIT_TIMEOUT", 10))
 for path in [OUTPUT_DIR, OUTPUT_DIR_SCREENSHOT, OUTPUT_DIR_HTML]:
     os.makedirs(path, exist_ok=True)
 
-def save_file(content, path):
+def save_file(content, path, action_label):
     try:
         with open(path, "w", encoding="utf-8") as f:
             f.write(content)
+        logging.info(MESSAGE_SYSTEM_LOGIN_WORKER[action_label].format(html_path=path))
         return path
     except Exception as e:
-        print(ERROR_MESSAGES_LOGIN_WORKER["save_html_failed_text"].format(details=str(e)))
+        logging.error(ERROR_MESSAGES_LOGIN_WORKER["save_html_failed_text"].format(details=str(e)))
         return ""
 
 def save_screenshot(driver, path):
     try:
         driver.save_screenshot(path)
+        logging.info(MESSAGE_SYSTEM_LOGIN_WORKER["screenshot_saved_text"].format(screenshot_path=path))
         return path
     except Exception as e:
-        print(ERROR_MESSAGES_LOGIN_WORKER["save_screenshot_failed_text"].format(details=str(e)))
+        logging.error(ERROR_MESSAGES_LOGIN_WORKER["save_screenshot_failed_text"].format(details=str(e)))
         return ""
 
 def perform_login(index, seq_id):
@@ -69,6 +74,7 @@ def perform_login(index, seq_id):
 
     try:
         driver = create_driver()
+        logging.info(MESSAGE_SYSTEM_LOGIN_WORKER["driver_initialized_text"].format(login_id=seq_id))
         driver.get(TARGET_URL)
         wait = WebDriverWait(driver, ELEMENT_WAIT_TIMEOUT)
 
@@ -94,7 +100,7 @@ def perform_login(index, seq_id):
         if SAVE_SCREENSHOTS:
             result["screenshot"] = save_screenshot(driver, screenshot_path)
         if SAVE_HTML_ON_FAILURE or result["status"] != MESSAGE_SYSTEM_LOGIN_WORKER["status_success_text_page"]:
-            result["html"] = save_file(driver.page_source, html_path)
+            result["html"] = save_file(driver.page_source, html_path, "html_saved_text")
 
         if TARGET_URL_TO_CHECK in driver.current_url:
             try:
@@ -120,11 +126,13 @@ def perform_login(index, seq_id):
         result["error"] = ERROR_MESSAGES_LOGIN_WORKER["webdriver_exception_text"].format(details=str(e))
     except Exception as e:
         result["error"] = ERROR_MESSAGES_LOGIN_WORKER["unexpected_error_text"].format(details=str(e))
+        logging.exception(ERROR_MESSAGES_LOGIN_WORKER["unexpected_error_text"].format(details=str(e)))
     finally:
         result["time_seconds"] = round(time.time() - start_time, 2)
         if driver:
             try:
                 driver.quit()
+                logging.info(MESSAGE_SYSTEM_LOGIN_WORKER["driver_quit_text"].format(login_id=seq_id))
             except Exception as e:
-                print(ERROR_MESSAGES_LOGIN_WORKER["driver_quit_failed_text"].format(details=str(e)))
+                logging.error(ERROR_MESSAGES_LOGIN_WORKER["driver_quit_failed_text"].format(details=str(e)))
     return result

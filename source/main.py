@@ -16,10 +16,13 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    CONCURRENT_LOGINS = int(os.getenv("CONCURRENT_LOGINS", 5))
+    min_logins = int(os.getenv("MIN_LOGINS", "1"))
+    max_logins = int(os.getenv("MAX_LOGINS", "1000"))
+
+    CONCURRENT_LOGINS = int(os.getenv("CONCURRENT_LOGINS", "5"))
     n_logins = args.num or CONCURRENT_LOGINS
-    if n_logins <= 0 or n_logins > 1000:
-        print(ERROR_MESSAGES_MAIN["invalid_arg_login_count"])
+    if n_logins < min_logins or n_logins > max_logins:
+        print(f"{ERROR_MESSAGES_MAIN['invalid_arg_login_count']} ({min_logins} e {max_logins})")
         exit(1)
     print(MESSAGE_SYSTEM_SUCESS_MAIN["logins_started_text"].format(n_logins=n_logins))
     run_logins(n_logins)

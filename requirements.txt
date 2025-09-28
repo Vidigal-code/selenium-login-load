@@ -1,3 +1,4 @@
 selenium>=4.15.0,<5.0.0
 python-dotenv>=1.1.1
 pandas>=2.1.0
+PySimpleGUI>=4.66.0
