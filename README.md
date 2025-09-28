@@ -17,6 +17,12 @@ Automate multiple configurable simultaneous logins to the test application:
 
 ---
 
+## Example Selenium Grid
+
+<img src="./example/example-selenium-grid.png" alt="" width="800"/> 
+
+---
+
 
 ## 📚 Documentation
 

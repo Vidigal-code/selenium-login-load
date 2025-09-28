@@ -1,17 +1,17 @@
 import os
 from dotenv import load_dotenv
 
-print("Carregando .env...")
+print("Loading .env file...")
 load_dotenv()
-print("Lido .env!")
+print(".env file loaded!")
 
 GRID_NODES = int(os.getenv("GRID_NODES", "1"))
-print(f"GRID_NODES lido: {GRID_NODES}")
+print(f"GRID_NODES value read: {GRID_NODES}")
 
 compose_file = 'docker-compose.yml'
 
 if os.path.exists(compose_file):
-    print("Excluindo docker-compose.yml existente...")
+    print("Deleting existing docker-compose.yml...")
     os.remove(compose_file)
 
 base_node = """
@@ -30,7 +30,7 @@ base_node = """
 """
 
 with open(compose_file, 'w') as f:
-    print("Gerando docker-compose.yml...")
+    print("Generating docker-compose.yml...")
     f.write("services:\n")
     f.write("  selenium-hub:\n")
     f.write("    image: selenium/hub:latest\n")
@@ -40,7 +40,7 @@ with open(compose_file, 'w') as f:
     f.write("    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:4444/status || exit 1\"]\n      interval: 10s\n      timeout: 5s\n      retries: 12\n")
     f.write("    networks:\n      - selenium-grid\n")
     for i in range(1, GRID_NODES+1):
-        print(f"Adicionando node-chrome-{i}")
+        print(f"Adding node-chrome-{i}")
         f.write(base_node.format(i=i))
     f.write("""
   app:
@@ -61,7 +61,7 @@ networks:
   selenium-grid:
     driver: bridge
 """)
-print("docker-compose.yml gerado com sucesso!")
+print("docker-compose.yml generated successfully!")
 
-print("Executando: docker compose up --build")
+print("Running: docker compose up --build")
 os.system("docker compose up --build")

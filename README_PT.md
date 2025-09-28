@@ -13,7 +13,13 @@ Automatize múltiplos logins simultâneos e configuráveis na aplicação de tes
 
 ## Exemplo Docker
 
-<img src="./example/example-docker.png" alt="" width="800"/> 
+<img src="./example/example-docker.png" alt="" width="800"/>
+
+---
+
+## Exemplo Selenium Grid
+
+<img src="./example/example-selenium-grid.png" alt="" width="800"/> 
 
 ---
 
