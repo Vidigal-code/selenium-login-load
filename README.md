@@ -3,6 +3,11 @@
 Automate multiple configurable simultaneous logins to the test application:  
 [https://the-internet.herokuapp.com/login](https://the-internet.herokuapp.com/login)
 
+## Example 
+
+<img src="./example/example.png" alt="" width="800"/> 
+
+
 ## How to use
 
 1. Install dependencies:
