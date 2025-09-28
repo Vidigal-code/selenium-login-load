@@ -18,9 +18,7 @@ Automate multiple configurable simultaneous logins to the test application:
 
 <img src="./example/example.png" alt="" width="800"/> 
 
-
-
-## How to use
+## How to use Python
 
 1. Install dependencies:
    ```bash
@@ -35,12 +33,31 @@ Automate multiple configurable simultaneous logins to the test application:
    python -m source.main -n 5
    ```
 
+## How to use Docker
+
+
+
+1. Build Docker image:
+   ```bash
+   docker compose build
+   ```
+
+2. Run:
+   ```bash
+   docker compose up
+   ```
+
+- Results are saved in the `/results` volume.
+- ChromeDriver is managed automatically in the container.
+
 ## Features
 
 - User-defined number of concurrent logins
 - Each login uses an isolated WebDriver
 - Success/failure validation
 - Results exported to results folder
+- Centralized messages for errors and system feedback
+- **Docker orchestration for local execution**
 
 ## Folder structure
 
@@ -58,6 +75,9 @@ source/
 requirements.txt
 .env
 README.md
+Dockerfile
+docker-compose.yml
+entrypoint.sh
 ```
 
 ## Configuration
@@ -84,7 +104,7 @@ EXPORT_JSON=true
 EXPORT_CSV=true
 TARGET_URL=https://the-internet.herokuapp.com/login
 TARGET_URL_TO_CHECK=/secure
-CHROMEDRIVER_PATH=C:\WebDriver\bin\chromedriver.exe
+CHROMEDRIVER_PATH=/usr/bin/chromedriver # Docker Config or windows C:\WebDriver\bin\chromedriver.exe
 ```
 
 ## ChromeDriver: Windows, Mac, Linux
