@@ -3,7 +3,7 @@ version: "3.8"
 services:
   app:
     build: .
-    container_name: selenium-logins-app
+    container_name: selenium-login-load
     env_file:
       - .env
     volumes:
