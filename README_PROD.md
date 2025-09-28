@@ -218,7 +218,14 @@ CHROMEDRIVER_PATH=
 
 ---
 
+### Graphical Interface
 
+```bash
+python -m source.main --gui
+```
+- Enter the desired quantity and click **Run**.
+
+---
 
 ## Generated Results
 

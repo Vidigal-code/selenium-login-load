@@ -14,6 +14,11 @@ ERROR_MESSAGES_LOGIN_WORKER = {
     "driver_quit_failed_text": "Falha ao finalizar driver: {details}"
 }
 
+ERROR_MESSAGES_GUI = {
+    "invalid_login_count": "Valor inválido. Digite um número inteiro entre {min_logins} e {max_logins}.",
+    "generic_error": "Ocorreu um erro inesperado na interface gráfica."
+}
+
 ERROR_MESSAGES_MAIN = {
     "invalid_arg_login_count": "Erro: Número de logins simultâneos deve ser entre 1 e 1000.",
     "missing_required_argument": "Argumento obrigatório ausente.",

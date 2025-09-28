@@ -11,6 +11,17 @@ MESSAGE_SYSTEM_SUCESS_MAIN = {
     "login_sucess_text": "Login realizado com sucesso para ID {login_id}."
 }
 
+MESSAGE_SYSTEM_GUI = {
+    "executing_logins_text": "Executando {n_logins} logins simultâneos...",
+    "finished_logins_text": "Execução finalizada. Confira os resultados.",
+    "waiting_for_threads_text": "Aguardando finalização das tarefas...",
+    "output_cleared_text": "Saída limpa.",
+    "window_title_text": "Automação de Logins Simultâneos",
+    "input_label_text": "Quantidade de logins simultâneos:",
+    "button_execute_text": "Executar",
+    "button_exit_text": "Sair",
+    "output_key_text": "-OUT-"
+}
 
 MESSAGE_SYSTEM_LOGIN_WORKER = {
     "driver_initialized_text": "WebDriver inicializado para login ID {login_id}.",

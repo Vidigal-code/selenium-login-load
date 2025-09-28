@@ -23,6 +23,12 @@ Automate multiple configurable simultaneous logins to the test application:
 
 ---
 
+## Example Interface Gui
+
+<img src="./example/example-interface-gui.png" alt="" width="800"/> 
+
+---
+
 
 ## 📚 Documentation
 
@@ -266,7 +272,14 @@ CHROMEDRIVER_PATH=
 
 ---
 
+### Graphical Interface
 
+```bash
+python -m source.main --gui
+```
+- Enter the desired quantity and click **Run**.
+
+---
 
 ## Generated Results
 

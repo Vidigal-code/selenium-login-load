@@ -23,6 +23,12 @@ Automatize múltiplos logins simultâneos e configuráveis na aplicação de tes
 
 ---
 
+## Exemplo Interface Gui
+
+<img src="./example/example-interface-gui.png" alt="" width="800"/> 
+
+---
+
 ## 📚 Documentação
 
 - [README.md](./README.md) — Documentação em inglês.
@@ -264,6 +270,14 @@ python generate_compose.py
 
 ---
 
+### Interface Gráfica
+
+```bash
+python -m source.main --gui
+```
+- Insira a quantidade desejada e clique em **Executar**.
+
+---
 
 ## Resultados Gerados
 

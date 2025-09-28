@@ -217,6 +217,14 @@ python generate_compose.py
 
 ---
 
+### Interface Gráfica
+
+```bash
+python -m source.main --gui
+```
+- Insira a quantidade desejada e clique em **Executar**.
+
+---
 
 ## Resultados Gerados
 
