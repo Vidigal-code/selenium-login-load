@@ -52,9 +52,9 @@ selenium-login-load/
 ├─ Dockerfile
 ├─ docker-compose.yml
 ├─ entrypoint.sh
-├─ README_PT.sh
-├─ README_PROD_PT.sh
-├─ README_PROD.sh
+├─ README_PT.md
+├─ README_PROD_PT.md
+├─ README_PROD.md
 └─ README.md
 ```
 
