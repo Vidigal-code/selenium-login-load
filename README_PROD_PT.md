@@ -44,11 +44,18 @@ selenium-login-load/
 │  │    ├─ ID-uuid/
 │  │        └─ uuid.html
 ├─ .env
+├─ .dockerignore
+├─ .gitignore
+├─ generate_compose_cli.py
+├─ generate_compose_grid.py
 ├─ requirements.txt
 ├─ Dockerfile
 ├─ docker-compose.yml
 ├─ entrypoint.sh
-└─ README_PROD.md
+├─ README_PT.sh
+├─ README_PROD_PT.sh
+├─ README_PROD.sh
+└─ README.md
 ```
 
 ---
