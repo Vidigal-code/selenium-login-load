@@ -29,6 +29,12 @@ Automate multiple configurable simultaneous logins to the test application:
 
 ---
 
+## Example Results output
+
+<img src="./example/example-results-output.png" alt="" width="800"/> 
+
+---
+
 
 ## 📚 Documentation
 

@@ -29,6 +29,12 @@ Automatize múltiplos logins simultâneos e configuráveis na aplicação de tes
 
 ---
 
+## Exemplo Results output
+
+<img src="./example/example-results-output.png" alt="" width="800"/> 
+
+---
+
 ## 📚 Documentação
 
 - [README.md](./README.md) — Documentação em inglês.
