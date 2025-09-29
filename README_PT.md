@@ -192,29 +192,77 @@ CHROMEDRIVER_PATH=/usr/bin/chromedriver# Docker Config or windows C:\WebDriver\b
 ### `.env` (execução grid docker)
 
 ```dotenv
+# Valor mínimo permitido para logins simultâneos.
 MIN_LOGINS=1
+
+# Valor máximo permitido para logins simultâneos.
 MAX_LOGINS=1000
+
+# Tipo de sequência dos IDs dos logins: INCREASING, DECREASING ou RANDOM.
 SEQUENCE=RANDOM
-CONCURRENT_LOGINS=2
+
+# Quantidade de logins simultâneos (total de tentativas).
+CONCURRENT_LOGINS=50
+
+# Máximo de threads/processos concorrentes.
 MAX_CONCURRENT=10
+
+# Executa o navegador em modo headless (sem interface gráfica). Use 'true' para produção.
 HEADLESS=true
+
+# Tempo máximo para carregar uma página (em segundos).
 PAGE_LOAD_TIMEOUT=30
+
+# Tempo máximo para esperar elementos na página (em segundos).
 ELEMENT_WAIT_TIMEOUT=10
+
+# Usuário para login.
 LOGIN_USERNAME=tomsmith
+
+# Senha para login.
 LOGIN_PASSWORD=SuperSecretPassword!
+
+# Pasta principal para salvar resultados.
 OUTPUT_DIR=./results
+
+#  Pasta para screenshots de cada login.
 OUTPUT_DIR_SCREENSHOT=./results/screenshot
+
+# Pasta para salvar HTML de cada login.
 OUTPUT_DIR_HTML=./results/html
+
+# Salva screenshots dos resultados dos logins (true/false).
 SAVE_SCREENSHOTS=true
+
+# Salva HTML da página após falha no login (true/false).
 SAVE_HTML_ON_FAILURE=true
+
+# Exporta resultados em JSON (true/false).
 EXPORT_JSON=true
+
+# Exporta resultados em CSV (true/false).
 EXPORT_CSV=true
+
+# Modo de execução do Selenium ('local' para rodar na máquina ou 'grid' para usar Selenium Grid).
 SELENIUM_MODE=grid
+
+#  URL do Selenium Hub (usado apenas no modo grid).
 SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
+
+# URL da página de login (aplicação alvo).
 TARGET_URL=https://the-internet.herokuapp.com/login
+
+# Fragmento da URL que indica sucesso do login (usado para validar redirecionamento).
 TARGET_URL_TO_CHECK=/secure
+
+# Habilita/desabilita uso do Selenium Grid (true/false).
 USE_GRID=true
-GRID_NODES=3
+
+# Quantidade de nodes Chrome no Grid (usado no docker-compose).
+GRID_NODES=1
+
+# Caminho do ChromeDriver local (necessário para execução local no Windows).
+# Docker Config or windows C:\WebDriver\bin\chromedriver.exe
 CHROMEDRIVER_PATH=
 ```
 
@@ -246,27 +294,43 @@ CHROMEDRIVER_PATH=
    - Altere o número conforme desejar.
    - Use `SEQUENCE=INCREASING`, `SEQUENCE=DECREASING` ou `SEQUENCE=RANDOM` no `.env` para mudar a ordem/IDs.
 
-### Docker + Selenium Grid (Produção)
+# Docker + Selenium Grid (Produção)
 
-1. **Construir contêineres:**
+## 1. Construa os containers
+
 ```bash
 docker compose build
 ```
 
-2. **Iniciar o ambiente completo:**
+## 2. Inicie o ambiente completo
+
 ```bash
 docker compose up
 ```
 - O aplicativo detecta automaticamente o modo Grid ou Local a partir do seu `.env`:
-- Se `SELENIUM_MODE=grid`, ele usa o Selenium Grid.
-- Se `SELENIUM_MODE=local`, ele executa localmente.
-- Os logs exibirão o **tempo gasto** e o **status** de cada tentativa de login.
+  - Se `SELENIUM_MODE=grid`, utiliza o Selenium Grid.
+  - Se `SELENIUM_MODE=local`, executa localmente.
+- Os logs mostrarão **tempo gasto** e **status** para cada tentativa de login.
 
-3. **Gerar e executar com o script Python:**
+## 3. Gerar e iniciar com o script Python Grid
+
 ```bash
-python generate_compose.py
+python generate_compose_grid.py
 ```
-- Este script gera automaticamente um `docker-compose.yml` com o número de nós definido em `.env` (`GRID_NODES`), exclui qualquer arquivo anterior e executa `docker compose up --build`.
+- Este script:
+  - Gera automaticamente um `docker-compose.yml` com o número de nós definido no `.env` (`GRID_NODES`)
+  - Exclui qualquer arquivo anterior de `docker-compose.yml`
+  - Executa: `docker compose up --build`
+
+## 4. Gerar e iniciar com o script Python CLI
+
+```bash
+python generate_compose_cli.py
+```
+- Este script:
+  - Gera automaticamente um `docker-compose.yml`
+  - Exclui qualquer arquivo anterior de `docker-compose.yml`
+  - Executa: `docker compose up --build`
 
 ---
 

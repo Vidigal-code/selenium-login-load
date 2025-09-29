@@ -1,47 +1,15 @@
 services:
-  selenium-hub:
-    image: selenium/hub:latest
-    container_name: selenium-hub
-    ports:
-      - "4444:4444"
-    environment:
-      GRID_MAX_SESSION: 50
-      GRID_BROWSER_TIMEOUT: 300
-      GRID_TIMEOUT: 300
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4444/status || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-    networks:
-      - selenium-grid
-
-  node-chrome-1:
-    image: selenium/node-chrome:4.35.0
-    depends_on:
-      selenium-hub:
-        condition: service_healthy
-    environment:
-      SE_EVENT_BUS_HOST: selenium-hub
-      SE_EVENT_BUS_PUBLISH_PORT: 4442
-      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
-      SE_NODE_MAX_SESSIONS: 2
-    networks:
-      - selenium-grid
-
   app:
     build: .
     container_name: selenium-login-load
-    depends_on:
-      - selenium-hub
     env_file:
       - .env
     volumes:
       - ./results:/app/results
     stdin_open: true
     tty: true
-    networks:
-      - selenium-grid
+    command: >
+      python -m source.main
 
 networks:
   selenium-grid:

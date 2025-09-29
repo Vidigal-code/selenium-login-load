@@ -28,9 +28,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libasound2 \
     libxrandr2 \
     chromium \
+    chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
 ENV CHROME_BIN=/usr/bin/chromium
+ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
 ENV PATH="/usr/bin:${PATH}"
 
 WORKDIR /app
