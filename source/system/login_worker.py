@@ -1,6 +1,7 @@
 import os
 import time
 import logging
+import uuid
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import (
     WebDriverException,
@@ -58,6 +59,7 @@ def perform_login(index, seq_id):
         "status": MESSAGE_SYSTEM_LOGIN_WORKER["status_failed_text"],
         "url": "",
         "error": "",
+        "token": "",
         "time_seconds": 0,
         "screenshot": "",
         "html": ""
@@ -109,6 +111,8 @@ def perform_login(index, seq_id):
                 ).text
                 if MESSAGE_SYSTEM_LOGIN_WORKER["status_success_text_page_condition"] in success_msg:
                     result["status"] = MESSAGE_SYSTEM_LOGIN_WORKER["status_success_text_page"]
+                    # generate a token to represent a successful session/credential
+                    result["token"] = str(uuid.uuid4())
                 else:
                     result["error"] = ERROR_MESSAGES_LOGIN_WORKER["redirect_no_success_message_text"]
             except TimeoutException:

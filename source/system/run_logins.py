@@ -32,7 +32,8 @@ def run_logins(n_logins):
 
     sequence_ids = generate_sequence(n_logins)
 
-    with ThreadPoolExecutor(max_workers=MAX_CONCURRENT) as executor:
+    workers = min(n_logins, MAX_CONCURRENT) if n_logins > 0 else 1
+    with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {executor.submit(perform_login, i, sequence_ids[i]): i for i in range(n_logins)}
         for future in as_completed(futures):
             res = future.result()
@@ -46,7 +47,7 @@ def run_logins(n_logins):
     for r in results:
         print(MESSAGE_SYSTEM_RUN_LOGINS["login_status_text"].format(
             index=r['index'], login_id=r['id'], status=r['status'], time_seconds=r['time_seconds']
-        ))
+        ) + (f" | Token: {r.get('token', '')}" if r.get('token') else ""))
 
     total_time = round(time.time() - start_total, 2)
     print(MESSAGE_SYSTEM_RUN_LOGINS["total_time_text"].format(total_time=total_time))
@@ -81,14 +82,15 @@ def run_logins_with_queue(n_logins, queue):
 
     queue.put(MESSAGE_SYSTEM_RUN_LOGINS["start_logins_text"].format(n_logins=n_logins))
 
-    with ThreadPoolExecutor(max_workers=MAX_CONCURRENT) as executor:
+    workers = min(n_logins, MAX_CONCURRENT) if n_logins > 0 else 1
+    with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {executor.submit(perform_login, i, sequence_ids[i]): i for i in range(n_logins)}
         for future in as_completed(futures):
             res = future.result()
             results.append(res)
             queue.put(MESSAGE_SYSTEM_RUN_LOGINS["login_status_text"].format(
                 index=res['index'], login_id=res['id'], status=res['status'], time_seconds=res['time_seconds']
-            ))
+            ) + (f" | Token: {res.get('token', '')}" if res.get('token') else ""))
 
     if SEQUENCE == "INCREASING":
         results.sort(key=lambda r: int(r["id"]))

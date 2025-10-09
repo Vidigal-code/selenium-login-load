@@ -4,6 +4,7 @@ from queue import Queue
 from dotenv import load_dotenv
 import os
 from source.messages.message_system import MESSAGE_SYSTEM_GUI
+from source.messages.message_errors import ERROR_MESSAGES_GUI
 
 load_dotenv()
 
@@ -40,7 +41,11 @@ def start_gui():
             print(MESSAGE_SYSTEM_GUI["executing_logins_text"].format(n_logins=n_logins))
             thread = Thread(target=run_logins_with_queue, args=(n_logins, queue), daemon=True)
             thread.start()
+        # allow re-running when thread finishes
+        if thread and not thread.is_alive():
+            thread = None
         while not queue.empty():
             msg = queue.get()
+            # print messages to the Output element
             print(msg)
     window.close()
