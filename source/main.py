@@ -15,6 +15,12 @@ if __name__ == "__main__":
         help=MESSAGE_SYSTEM_SUCESS_MAIN["info_num_sum_text"]
     )
     parser.add_argument(
+        "--max-workers",
+        type=int,
+        help="Máximo de workers concorrentes (substitui MAX_CONCURRENT)",
+        default=None
+    )
+    parser.add_argument(
         "--gui",
         action="store_true",
         help=MESSAGE_SYSTEM_SUCESS_MAIN["exe_interface_gui_text"]
@@ -30,9 +36,13 @@ if __name__ == "__main__":
         start_gui()
     else:
         CONCURRENT_LOGINS = int(os.getenv("CONCURRENT_LOGINS", "5"))
-        n_logins = args.num or CONCURRENT_LOGINS
+    n_logins = args.num or CONCURRENT_LOGINS
+    max_workers = args.max_workers
         if n_logins < min_logins or n_logins > max_logins:
             print(f"{ERROR_MESSAGES_MAIN['invalid_arg_login_count']} ({min_logins} e {max_logins})")
             exit(1)
         print(MESSAGE_SYSTEM_SUCESS_MAIN["logins_started_text"].format(n_logins=n_logins))
-        run_logins(n_logins)
+        if max_workers:
+            run_logins(n_logins, max_workers=max_workers)
+        else:
+            run_logins(n_logins)

@@ -16,8 +16,9 @@ def start_gui():
     max_logins = int(os.getenv("MAX_LOGINS", "1000"))
     layout = [
         [sg.Text(MESSAGE_SYSTEM_GUI["input_label_text"]), sg.InputText(default_logins, key="-N-")],
+        [sg.Text("Máx. workers (opcional):"), sg.InputText("", key="-W-", size=(8,1))],
         [sg.Button(MESSAGE_SYSTEM_GUI["button_execute_text"]), sg.Button(MESSAGE_SYSTEM_GUI["button_exit_text"])],
-        [sg.Output(size=(80, 20), key=MESSAGE_SYSTEM_GUI["output_key_text"])]
+        [sg.Multiline(size=(80, 20), key=MESSAGE_SYSTEM_GUI["output_key_text"], disabled=True, autoscroll=True)]
     ]
     window = sg.Window(MESSAGE_SYSTEM_GUI["window_title_text"], layout)
     thread = None
@@ -37,15 +38,31 @@ def start_gui():
                     ERROR_MESSAGES_GUI["invalid_login_count"].format(min_logins=min_logins, max_logins=max_logins)
                 )
                 continue
+            # clear output
             window[MESSAGE_SYSTEM_GUI["output_key_text"]].update("")
+            # parse optional max workers
+            max_workers_val = None
+            try:
+                if values.get("-W-"):
+                    max_workers_val = int(values.get("-W-"))
+            except Exception:
+                window[MESSAGE_SYSTEM_GUI["output_key_text"]].update("Valor inválido para max workers. Ignorando.")
+                max_workers_val = None
+
             print(MESSAGE_SYSTEM_GUI["executing_logins_text"].format(n_logins=n_logins))
-            thread = Thread(target=run_logins_with_queue, args=(n_logins, queue), daemon=True)
+            if max_workers_val:
+                thread = Thread(target=run_logins_with_queue, args=(n_logins, queue, max_workers_val), daemon=True)
+            else:
+                thread = Thread(target=run_logins_with_queue, args=(n_logins, queue), daemon=True)
             thread.start()
         # allow re-running when thread finishes
         if thread and not thread.is_alive():
             thread = None
         while not queue.empty():
             msg = queue.get()
-            # print messages to the Output element
-            print(msg)
+            # append message to the Multiline element
+            try:
+                window[MESSAGE_SYSTEM_GUI["output_key_text"]].update(msg + "\n", append=True)
+            except Exception:
+                print(msg)
     window.close()

@@ -25,14 +25,26 @@ def generate_sequence(n):
     else:
         return [str(uuid.uuid4()) for _ in range(n)]
 
-def run_logins(n_logins):
+FORCE_FULL_PARALLEL = os.getenv("FORCE_FULL_PARALLEL", "false").lower() == "true"
+
+
+def run_logins(n_logins, max_workers: int = None):
     print(MESSAGE_SYSTEM_RUN_LOGINS["start_logins_text"].format(n_logins=n_logins))
     start_total = time.time()
     results = []
 
     sequence_ids = generate_sequence(n_logins)
 
-    workers = min(n_logins, MAX_CONCURRENT) if n_logins > 0 else 1
+    # Decide worker count:
+    # - If max_workers provided by caller, use it.
+    # - Else if FORCE_FULL_PARALLEL env var is true, use n_logins.
+    # - Else use configured MAX_CONCURRENT (safety cap).
+    if max_workers is not None:
+        workers = max(1, int(max_workers))
+    elif FORCE_FULL_PARALLEL:
+        workers = max(1, n_logins)
+    else:
+        workers = min(n_logins, MAX_CONCURRENT) if n_logins > 0 else 1
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {executor.submit(perform_login, i, sequence_ids[i]): i for i in range(n_logins)}
         for future in as_completed(futures):
@@ -75,14 +87,20 @@ def run_logins(n_logins):
             ))
     print(MESSAGE_SYSTEM_RUN_LOGINS["summary_saved_text"].format(summary_path=summary_path))
 
-def run_logins_with_queue(n_logins, queue):
+def run_logins_with_queue(n_logins, queue, max_workers: int = None):
     start_total = time.time()
     results = []
     sequence_ids = generate_sequence(n_logins)
 
     queue.put(MESSAGE_SYSTEM_RUN_LOGINS["start_logins_text"].format(n_logins=n_logins))
 
-    workers = min(n_logins, MAX_CONCURRENT) if n_logins > 0 else 1
+    # Decide worker count for queue-backed run as above
+    if max_workers is not None:
+        workers = max(1, int(max_workers))
+    elif FORCE_FULL_PARALLEL:
+        workers = max(1, n_logins)
+    else:
+        workers = min(n_logins, MAX_CONCURRENT) if n_logins > 0 else 1
     with ThreadPoolExecutor(max_workers=workers) as executor:
         futures = {executor.submit(perform_login, i, sequence_ids[i]): i for i in range(n_logins)}
         for future in as_completed(futures):
