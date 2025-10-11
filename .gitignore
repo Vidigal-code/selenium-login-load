@@ -2,8 +2,12 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+
+**/__init__.py
+
 *.env
 .env
+
 *.sqlite3
 *.db
 *.log
@@ -16,17 +20,17 @@ __pycache__/
 
 .DS_Store
 Thumbs.db
+desktop.ini
 
 results/
 !results/.gitkeep
 
 *.pid
+
 docker-compose.override.yml
 
 pip-wheel-metadata/
 pip-log.txt
-
-desktop.ini
 
 chromedriver.exe
 chromedriver_mac*
@@ -35,7 +39,7 @@ chromedriver_linux*
 node_modules/
 
 htmlcov/
-coverage.xml
+coverage.xml  
 *.cover
 *.pytest_cache/
 
